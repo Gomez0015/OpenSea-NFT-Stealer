@@ -1,6 +1,6 @@
 
 # 11/28/2021
-# Made by DanChan
+# Made by DanChan Edited by RaxoCoding
 # NFT Stealer (OpenSea)
 
 import requests
