@@ -7,8 +7,9 @@ import requests
 import os
 import json
 import math
+from PIL import ImageOps, Image
 
-CollectionName = "Collection Name".lower()
+CollectionName = "divineanarchy".lower()
 
 # Get information regarding collection
 
@@ -63,22 +64,23 @@ for i in range(iter):
         for asset in data["assets"]:
           formatted_number = f"{int(asset['token_id']):04d}"
 
-          print(f"\n#{formatted_number}:")
+          print(f"\n#{i}:")
 
-          # Check if data for the NFT already exists, if it does, skip saving it
-          if os.path.exists(f'./images/{CollectionName}/image_data/{formatted_number}.json'):
-              print(f"  Data  -> [\u2713] (Already Downloaded)")
-              stats["AlreadyDownloadedData"] += 1
-          else:
-                # Take the JSON from the URL, and dump it to the respective file.
-                dfile = open(f"./images/{CollectionName}/image_data/{formatted_number}.json", "w+")
-                json.dump(asset, dfile, indent=3)
-                dfile.close()
-                print(f"  Data  -> [\u2713] (Successfully downloaded)")
-                stats["DownloadedData"] += 1
+            # Keep this to download json data 
+            # Check if data for the NFT already exists, if it does, skip saving it
+            #   if os.path.exists(f'./images/{CollectionName}/image_data/{i}.json'):
+            #       print(f"  Data  -> [\u2713] (Already Downloaded)")
+            #       stats["AlreadyDownloadedData"] += 1
+            #   else:
+            #         # Take the JSON from the URL, and dump it to the respective file.
+            #         dfile = open(f"./images/{CollectionName}/image_data/{i}.json", "w+")
+            #         json.dump(asset, dfile, indent=3)
+            #         dfile.close()
+            #         print(f"  Data  -> [\u2713] (Successfully downloaded)")
+            #         stats["DownloadedData"] += 1
 
           # Check if image already exists, if it does, skip saving it
-          if os.path.exists(f'./images/{CollectionName}/{formatted_number}.png'):
+          if os.path.exists(f'./images/{CollectionName}/{i}.png'):
               print(f"  Image -> [\u2713] (Already Downloaded)")
               stats["AlreadyDownloadedImages"] += 1
           else:
@@ -90,9 +92,14 @@ for i in range(iter):
 
           # If the URL returns status code "200 Successful", save the image into the "images" folder.
             if image.status_code == 200:
-                file = open(f"./images/{CollectionName}/{formatted_number}.png", "wb+")
+                file = open(f"./images/{CollectionName}/{i}.png", "wb+")
                 file.write(image.content)
                 file.close()
+
+                im = Image.open(f"./images/{CollectionName}/{i}.png")
+                im = ImageOps.mirror(im)
+                im.save(f"./images/{CollectionName}/{i}.png")
+
                 print(f"  Image -> [\u2713] (Successfully downloaded)")
                 stats["DownloadedImages"] += 1
             # If the URL returns a status code other than "200 Successful", alert the user and don't save the image
