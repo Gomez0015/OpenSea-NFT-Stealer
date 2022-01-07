@@ -67,7 +67,7 @@ for i in range(iter):
           currentIndex += 1
           formatted_number = f"{int(asset['token_id']):04d}"
 
-          print(f"\n#{i}:")
+          print(f"\n#{currentIndex}:")
 
             # Keep this to download json data 
             # Check if data for the NFT already exists, if it does, skip saving it
