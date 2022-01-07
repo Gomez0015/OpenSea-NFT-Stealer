@@ -55,6 +55,8 @@ stats = {
 "FailedImages": 0
 }
 
+currentIndex = -1
+
 # Iterate through every unit
 for i in range(iter):
     offset = i * 50
@@ -62,6 +64,7 @@ for i in range(iter):
 
     if "assets" in data:
         for asset in data["assets"]:
+          currentIndex += 1
           formatted_number = f"{int(asset['token_id']):04d}"
 
           print(f"\n#{i}:")
@@ -80,7 +83,7 @@ for i in range(iter):
             #         stats["DownloadedData"] += 1
 
           # Check if image already exists, if it does, skip saving it
-          if os.path.exists(f'./images/{CollectionName}/{i}.png'):
+          if os.path.exists(f'./images/{CollectionName}/{currentIndex}.png'):
               print(f"  Image -> [\u2713] (Already Downloaded)")
               stats["AlreadyDownloadedImages"] += 1
           else:
@@ -92,13 +95,13 @@ for i in range(iter):
 
           # If the URL returns status code "200 Successful", save the image into the "images" folder.
             if image.status_code == 200:
-                file = open(f"./images/{CollectionName}/{i}.png", "wb+")
+                file = open(f"./images/{CollectionName}/{currentIndex}.png", "wb+")
                 file.write(image.content)
                 file.close()
 
-                im = Image.open(f"./images/{CollectionName}/{i}.png")
+                im = Image.open(f"./images/{CollectionName}/{currentIndex}.png")
                 im = ImageOps.mirror(im)
-                im.save(f"./images/{CollectionName}/{i}.png")
+                im.save(f"./images/{CollectionName}/{currentIndex}.png")
 
                 print(f"  Image -> [\u2713] (Successfully downloaded)")
                 stats["DownloadedImages"] += 1
